@@ -304,7 +304,7 @@ export class AppComponent {
       styles: {
         price: {
           bold: true,
-          fontSize: 25,
+          fontSize: 30,
           margin: [28, -10, 0, 0]
         },
         barImg: {
