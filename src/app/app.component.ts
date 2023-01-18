@@ -1,40 +1,90 @@
 import { Component } from '@angular/core';
-
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-class Product {
-  qty: number;
-  description: string;
-  slot: number;
-  item: number;
-  count: number;
-  constructor(qty: number = 0, description: string = '', slot: number = 0, item: number = 0, count: number = 0) {
-    this.qty = qty;
-    this.description = description;
-    this.slot = slot;
-    this.item = item;
-    this.count = count;
+
+class OrderHeader {
+
+  public inv_reduction: number;
+  public Customer_num: number;
+  public dc_point_name: string;
+
+  constructor(inv_reduction: number, Customer_num: number, dc_point_name: string) {
+    this.inv_reduction = inv_reduction;
+    this.Customer_num = Customer_num;
+    this.dc_point_name = dc_point_name;
   }
 }
-class Invoice {
-  customerName: string;
-  address: string;
-  contactNo: number;
-  email: string;
+class PalletStackingDetail {
 
-  products: Product[] = [];
-  additionalDetails: string;
+  public Id: number = 1;
+  public NumOfCraftes: number = 2;
+  public Instruction: string = '3x5,6x31';
 
-  constructor(customerName: string = '', address: string = '', contactNo: number = 0, email: string = '', additionalDetails: string = '', products: Product[] = []) {
-    // Initially one empty product row we will show
-    this.customerName = customerName;
-    this.address = address;
-    this.contactNo = contactNo;
-    this.additionalDetails = additionalDetails;
-    this.email = email;
-    this.products = products;
+  constructor(Id: number, NumOfCraftes: number, Instruction: string) {
+    this.Id = Id;
+    this.NumOfCraftes = NumOfCraftes;
+    this.Instruction = Instruction;
+  }
+}
+class ItemCodeDetail {
+
+  public QuidId: number;
+  public ItemCode: number
+  public NewDescription: string;
+  public DetailWic: number;
+  public CapColor: string;
+  public Size: string;
+  public ProductSize: string;
+  public Description: string;
+
+  constructor(QuidId: number, ItemCode: number, NewDescription: string, DetailWic: number, CapColor: string, Size: string, ProductSize: string, Description: string) {
+    this.QuidId = QuidId;
+    this.ItemCode = ItemCode;
+    this.NewDescription = NewDescription;
+    this.DetailWic = DetailWic;
+    this.CapColor = CapColor;
+    this.Size = Size;
+    this.ProductSize = ProductSize;
+    this.Description = Description;
+  }
+}
+
+class Store {
+  public barcodeImgAsBase64: string = '';
+  public storeId: number = 829;
+  public invoiceNO: number = 1137029;
+  orderHeader: OrderHeader;
+  palletStackingDetail: PalletStackingDetail;
+  products: ItemCodeDetail[] = [];
+  public totalQty: number = 75;
+
+  constructor() {
+    this.orderHeader = new OrderHeader(431, 838, "142016");
+    this.palletStackingDetail = new PalletStackingDetail(5, 3, '3x5,6x31');
+    this.products.push(new ItemCodeDetail(11, 343, 'Pure Gal', 343, '#s343', '35', '33', 'Description'));
+    this.products.push(new ItemCodeDetail(12, 344, 'Pure Gal', 343, '#s343', '37', '34', 'Description'));
+    this.products.push(new ItemCodeDetail(13, 344, 'Pure Gal', 343, '#s343', '38', '35', 'Description'));
+    this.products.push(new ItemCodeDetail(14, 345, 'Pure Gal', 343, '#s343', '39', '36', 'Description'));
+    this.products.push(new ItemCodeDetail(15, 346, 'Pure Gal', 343, '#s343', '40', '37', 'Description'));
+    this.products.push(new ItemCodeDetail(16, 347, 'Pure Gal', 343, '#s343', '41', '38', 'Description'));
+    this.products.push(new ItemCodeDetail(17, 348, 'Pure Gal', 343, '#s343', '42', '39', 'Description'));
+    this.products.push(new ItemCodeDetail(18, 349, 'Pure Gal', 343, '#s343', '43', '40', 'Description'));
+    this.products.push(new ItemCodeDetail(19, 350, 'Pure Gal', 343, '#s343', '44', '41', 'Description'));
+    this.products.push(new ItemCodeDetail(18, 351, 'Pure Gal', 343, '#s343', '45', '42', 'Description'));
+    this.products.push(new ItemCodeDetail(19, 352, 'Pure Gal', 343, '#s343', '46', '43', 'Description'));
+    this.products.push(new ItemCodeDetail(20, 354, 'Pure Gal', 343, '#s343', '47', '44', 'Description'));
+    this.products.push(new ItemCodeDetail(21, 355, 'Pure Gal', 343, '#s343', '48', '45', 'Description'));
+    this.products.push(new ItemCodeDetail(22, 357, 'Pure Gal', 343, '#s343', '49', '46', 'Description'));
+    this.products.push(new ItemCodeDetail(23, 358, 'Pure Gal', 343, '#s343', '55', '47', 'Description'));
+    this.products.push(new ItemCodeDetail(23, 358, 'Pure Gal', 343, '#s343', '55', '47', 'Description'));
+    this.products.push(new ItemCodeDetail(23, 358, 'Pure Gal', 343, '#s343', '55', '47', 'Description'));
+    this.products.push(new ItemCodeDetail(23, 358, 'Pure Gal', 343, '#s343', '55', '47', 'Description'));
+    this.products.push(new ItemCodeDetail(23, 358, 'Pure Gal', 343, '#s343', '55', '47', 'Description'));
+    this.products.push(new ItemCodeDetail(23, 358, 'Pure Gal', 343, '#s343', '55', '47', 'Description'));
+    this.products.push(new ItemCodeDetail(23, 358, 'Pure Gal', 343, '#s343', '55', '47', 'Description'));
+    this.products.push(new ItemCodeDetail(23, 358, 'Pure Gal', 343, '#s343', '55', '47', 'Description'));
   }
 }
 @Component({
@@ -43,152 +93,120 @@ class Invoice {
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  public productList: Product[] = []
-  invoice = new Invoice('Shahid Islam', 'Lahore Pakistan', 34342432, 'shahid.islam@gmail.com', 'Additional detail given below', []);
+  // public productList: ItemCodeDetail[] = []
+  public store = new Store();
+  public stores: Store[] = new Array<Store>();
   public barcodeImgAsBase64: string = '';
-  public invoiceNO: number = 1137029;
-  public storeValue: number = 829;
-  public AssignmentNo: number = 142016;
-  public whareNo: number = 4311;
-  public standardPallet: string = 'Standard Pallets(Tixhi9x5)'
-  public standardPalletValue: number = 1;
-  public totalQty: number = 75;
-  public customPallets: string = '3x5,6x3';
-  public palletId: string = '5536405 5536412';
+  public reportData: any[] = [];
 
-  private  CustomPalletStacks = `Custom Pallet Stacks:`;
-  private  palletIDs = `Pallet IDs:`;
-  private  warehouse = 'Warehouse: ';
-  private  assignement = 'Assignment #';
+
 
   constructor() {
-    this.invoice.products.push(new Product(5, 'puerle gal', 3422, 300, 2));
-    this.invoice.products.push(new Product(15, 'Green gal', 23422, 140, 4));
-    this.invoice.products.push(new Product(65, 'red gal', 43422, 130, 5));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-    this.invoice.products.push(new Product(35, 'Pink gal', 34232, 300, 1));
-
-
+          //convert img into base64
     this.toDataURL('/assets/barcode.jpg').then((imagAsBase64: string) => {
       this.barcodeImgAsBase64 = imagAsBase64;
-      console.log("x", imagAsBase64)
-    })
+    });
+
+
+    this.stores.push(new Store());
+    this.stores.push(new Store());
+    this.stores.push(new Store());
+    this.stores.push(new Store());
 
   }
+  loadData() {
+    this.reportData = [];
 
+    this.stores.forEach((store, index) => {
+      if (index > 0) {
+        //this line break the page, display the new store on new page,
+        this.reportData.push({ text: '', pageOrientation: 'portrait', pageBreak: 'before' });
+      }
+      this.reportData.push({
 
-  generatePDF(action = 'open') {
-    let docDefinition = {
-      content: [
+        columns: [
+          [
+            {
+              text: 'Store',
+              bold: true
+            },
+            {
+              text: `${store.orderHeader.Customer_num}`,
+              style: 'price'
+            },
+          ],
+          [
+            {
+              text: 'Lane',
+              alignment: 'left',
+              bold: true,
+            }
+          ],
+          [
+            {
+              image: `${this.barcodeImgAsBase64}`,
+              width: 70,
+              height: 25,
+              alignment: 'left',
+              style: 'barImg'
+            },
+            {
+              columns: [
+                {
+                  text: [
+                    'Assignment #',
+                    {
+                      text: `${store.orderHeader.dc_point_name}`,
+                      fontSize: 12,
+                      bold: true,
+                    },
 
-        {
-          columns: [
-            [
-              {
-                text: 'Store',
-                bold: true
-              },
-              {
-                text: `${this.storeValue}`,
-                style: 'price'
-              },
-            ],
-            [
-              {
-                text: 'Lane',
-                alignment: 'left',
-                bold: true,
-              }
-            ],
-            [
-              {
-                image: `${this.barcodeImgAsBase64}`,
-                width: 70,
-                height: 25,
-                alignment: 'left',
-                style: 'barImg'
-              },
-              {
-                columns: [
-                  {
-                    text: [
-                      this.assignement,
-                      {
-                        text: `${this.AssignmentNo}`,
-                        fontSize: 12,
-                        bold: true,
-                      },
+                  ]
+                }
 
-                    ]
-                  }
+              ],
+              alignment: 'left',
+              style: 'Assignment'
+            },
+            {
+              columns: [
+                {
+                  text: [
+                    'Warehouse ',
+                    {
+                      text: `${store.orderHeader.inv_reduction}`,
+                      fontSize: 12,
+                      bold: true,
+                    },
 
-                ],
-                alignment: 'left',
-                style: 'Assignment'
-              },
-              {
-                columns: [
-                  {
-                    text: [
-                      this.warehouse,
-                      {
-                        text: `${this.whareNo}`,
-                        fontSize: 12,
-                        bold: true,
-                      },
+                  ],
+                  alignment: 'left',
+                  style: 'Warehouse'
+                }
+              ]
+              ,
+            }
 
-                    ],
-                    alignment: 'left',
-                    style: 'Warehouse'
-                  }
-                ]
-                ,
-              }
-
-            ]
           ]
-        },
+        ]
+      });
+
+      this.reportData.push(
+
         {
           columns: [
             [
               {
-                text: `Invoice# ${this.invoiceNO}`,
+                text: `Invoice# ${store.invoiceNO}`,
                 bold: true
               },
               {
                 columns: [
                   {
                     text: [
-                      `${this.standardPallet}:`,
+                      `Standard Pallets(Tixhi9x5):`,
                       {
-                        text: ` ${this.standardPalletValue}`,
+                        text: ` ${store.palletStackingDetail.Id}`,
                         fontSize: 12,
                         bold: true,
                       },
@@ -202,9 +220,9 @@ export class AppComponent {
                 columns: [
                   {
                     text: [
-                      this.palletIDs,
+                      'Pallet IDs',
                       {
-                        text: ` ${this.palletId}`,
+                        text: ` ${store.palletStackingDetail.Id}`,
                         fontSize: 12,
                         bold: true,
                       },
@@ -223,7 +241,7 @@ export class AppComponent {
                     text: [
                       `Total Qty:`,
                       {
-                        text: ` ${this.totalQty}`,
+                        text: ` ${store.totalQty}`,
                         fontSize: 12,
                         bold: true,
                       },
@@ -236,9 +254,9 @@ export class AppComponent {
                 columns: [
                   {
                     text: [
-                      this.CustomPalletStacks,
+                      'Custom Pallet Stacks',
                       {
-                        text: ` ${this.customPallets}`,
+                        text: ` ${store.palletStackingDetail.NumOfCraftes}`,
                         fontSize: 12,
                         bold: true,
                       },
@@ -290,17 +308,32 @@ export class AppComponent {
             headerRows: 1,
             widths: ['auto', '*', 'auto', 'auto', 'auto'],
             body: [
-              [{ text: 'Qty',alignment:'left' }, { text: 'Description', }, { text: 'slot', style: 'fieldMargin' }, { text: 'Item', style: 'fieldMargin' }, { text: 'Count', }],
-              ...this.invoice.products.map(p => (
-                [{ text: `${p.qty}`, style: 'fieldBold' },
-                { text: p.description },
-                { text: `${p.slot}`, style: 'fieldMargin' },
-                { text: p.item, style: 'fieldMargin' },
-                { text: p.count, alignment: 'center' }])),
+              [
+                //Table Header
+                { text: 'Qty', alignment: 'left' },
+                { text: 'Description', }, { text: 'slot', style: 'fieldMargin' }, { text: 'Item', style: 'fieldMargin' }, { text: 'Count', }],
+
+              //Table value from Array Object
+              ...this.store.products.map(p => (
+                [{ text: `${p.Size}`, style: 'fieldBold' },
+                { text: `${p.Description}` },
+                { text: `${p.ItemCode}`, style: 'fieldMargin' },
+                { text: `${p.DetailWic}`, style: 'fieldMargin' },
+                { text: `${p.ProductSize}`, alignment: 'center' }])),
             ]
-          }
+          },
+
         }
-      ],
+      );
+
+    });
+  }
+
+  generatePDF(action = 'open') {
+    this.loadData();
+    let docDefinition = {
+
+      content: this.reportData,
       styles: {
         price: {
           bold: true,
@@ -324,10 +357,10 @@ export class AppComponent {
           bold: true,
         },
         fieldMargin: {
-          margin: [15, 0, 15,0]
+          margin: [15, 0, 15, 0]
         },
-        table:{
-          margin: [0, 3, 0,0]
+        table: {
+          margin: [0, 3, 0, 0]
         }
       }
     };
@@ -343,9 +376,8 @@ export class AppComponent {
 
   }
 
-  addProduct() {
-    this.invoice.products.push(new Product());
-  }
+
+
 
   toDataURL = async (url) => {
     var res = await fetch(url);
@@ -365,4 +397,6 @@ export class AppComponent {
     console.log("result", result)
     return result
   };
+
+
 }
